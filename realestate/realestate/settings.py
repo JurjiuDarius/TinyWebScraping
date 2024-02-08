@@ -65,7 +65,7 @@ ROBOTSTXT_OBEY = False
 #    "realestate.pipelines.RealestatePipeline": 300,
 # }
 ITEM_PIPELINES = {
-    "postgres_demo.pipelines.RealestatePipeline": 300,
+    "realestate.pipelines.RealestatePipeline": 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

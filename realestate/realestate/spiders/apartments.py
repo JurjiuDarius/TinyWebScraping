@@ -40,7 +40,7 @@ class ApartmentsSpider(scrapy.Spider):
     #     yield response.body
 
     def parse(self, response):
-        if response.url[-2:].isdigit() and int(response.url[-2:]) > 26:
+        if response.url[-2:].isdigit() and int(response.url[-2:]) > 25:
             return
 
         self.driver.get(response.url)
