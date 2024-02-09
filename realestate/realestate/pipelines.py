@@ -36,7 +36,8 @@ class RealestatePipeline:
             id serial PRIMARY KEY, 
             img_url VARCHAR(255),
             name VARCHAR(255),
-            location VARCHAR(255)
+            location VARCHAR(255),
+            page VARCHAR(255)
         )
         """
         )
@@ -45,8 +46,8 @@ class RealestatePipeline:
 
         ## Define insert statement
         self.cur.execute(
-            """ insert into apartments (img_url, name, location) values (%s,%s,%s)""",
-            (item["url"], str(item["name"]), item["location"]),
+            """ insert into apartments (img_url, name, location, page) values (%s,%s,%s,%s)""",
+            (item["url"], str(item["name"]), item["location"], item["page"]),
         )
 
         ## Execute insert of data into database

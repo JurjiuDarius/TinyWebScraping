@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Home</title>
+  </head>
+  <body>
+    <h1>Apartment Listings</h1>
+    <ul>
+      {% for apartment in apartments %}
+      <li>{{ apartment[2] }} located at {{ apartment[3] }}</li>
+      <img src="{{apartment[1]}}" />
+      {% endfor %}
+    </ul>
+  </body>
+</html>

@@ -23,7 +23,7 @@ class ApartmentsSpider(scrapy.Spider):
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
 
-        self.driver = webdriver.Chrome()
+        self.driver = webdriver.Chrome(options=chrome_options)
 
     def start_requests(self):
         for url in self.start_urls:
@@ -32,12 +32,6 @@ class ApartmentsSpider(scrapy.Spider):
                 callback=self.parse,
                 dont_filter=True,
             )
-
-    # def parse(self, response):
-    #     ok = ""
-    #     self.log("The url is " + response.url)
-    #     self.log(response.body)
-    #     yield response.body
 
     def parse(self, response):
         if response.url[-2:].isdigit() and int(response.url[-2:]) > 25:
@@ -49,6 +43,7 @@ class ApartmentsSpider(scrapy.Spider):
         WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "div.property-list"))
         )
+
         WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located(
                 (
@@ -57,28 +52,29 @@ class ApartmentsSpider(scrapy.Spider):
                 )
             )
         )
+        time.sleep(0.5)
         properties = self.driver.find_elements(By.CSS_SELECTOR, "div.property")
         filename = f"images-{response.url[-2:]}.txt"
 
-        with open(filename, "a+", encoding="utf-8") as f:
-            # Selector for all the names from the link with class 'ng-binding'
-            for property in properties:
-                img = property.find_element(By.XPATH, "./preact/div/div[1]/a[1]/img")
-                img_source = img.get_attribute("src")
-                property_name = property.find_element(
-                    By.XPATH, "./div/div/span/h2/a"
-                ).text
-                property_location = property.find_element(
-                    By.XPATH, "./div/div/span/span[1]"
-                ).text
+        for property in properties:
 
-                yield {
-                    "url": img_source,
-                    "name": property_name,
-                    "location": property_location,
-                }
+            img = property.find_element(By.XPATH, "./preact/div/div[1]/a[1]/img")
+            img_source = img.get_attribute("src")
+            property_name = property.find_element(
+                By.CSS_SELECTOR, "span.name"
+            ).get_attribute("textContent")
+            property_location = property.find_element(
+                By.CSS_SELECTOR, "span.locality"
+            ).get_attribute("textContent")
 
-        ##Go to the next page
+            yield {
+                "url": img_source,
+                "name": property_name,
+                "location": property_location,
+                "page": response.url[-2:],
+            }
+
+        ## Go to the next page
         next_button = self.driver.find_element(
             By.XPATH,
             '//*[@id="page-layout"]/div[2]/div[3]/div[3]/div/div/div/div/div[3]/div/div[22]/ul[1]/li[12]/a',
