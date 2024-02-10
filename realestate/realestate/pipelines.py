@@ -15,13 +15,12 @@ class RealestatePipeline:
 
     def __init__(self):
         load_dotenv()
-        ## Connection Details
+
         hostname = os.environ["DB_HOST"]
         username = os.environ["DB_USER"]
         password = os.environ["DB_PASS"]
         database = os.environ["DB_NAME"]
 
-        ## Create/Connect to database
         self.connection = psycopg2.connect(
             host=hostname, user=username, password=password, dbname=database
         )

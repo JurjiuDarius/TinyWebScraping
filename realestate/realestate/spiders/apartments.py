@@ -52,9 +52,8 @@ class ApartmentsSpider(scrapy.Spider):
                 )
             )
         )
-        time.sleep(0.5)
+
         properties = self.driver.find_elements(By.CSS_SELECTOR, "div.property")
-        filename = f"images-{response.url[-2:]}.txt"
 
         for property in properties:
 
